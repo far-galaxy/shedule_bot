@@ -12,20 +12,36 @@ lesson_type = {"lesson-color-type-1" : "📗",
                }
 
 class Day(object):
-    """TODO: Write a doc here"""
+    """Day object
+    
+    Args:
+        :date: :class:`datetime.time` date date date date date date date date date
+        :lessons: `list` of lessons
+    """
     def __init__(self, date, lessons):
         self.date = date
         self.lessons = lessons
 
 class Shedule(object):
-    """TODO: Write a doc here"""
+    """Shedule object
+    
+    Args:
+        groupID: `int` id of group in SSAU site
+        group: `str` local number of group (e.g. 2205-240502D)
+        week: (optional) `int` number of week of semester
+    """
     def __init__(self, groupID, group, week=1):
         self.group = group
         self.groupID = groupID
         self.week = week
     
     def update(self, week = None, add_info = None):
-        """TODO: Write a doc here"""
+        """Load shedule from SSAU and parse
+        
+        Args:
+            week: `int` number of week of semester
+            add_info Additional information about teacher (`dict` {"surname":"information"})
+        """
         if week != None : self.week = week 
         site = requests.get(f'https://ssau.ru/rasp?groupId={self.groupID}&selectedWeek={self.week}')
         print(site)
@@ -36,8 +52,7 @@ class Shedule(object):
         """Parsing of SSAU Shedule page
         
         Args:
-            add_info: Additional information about teacher ('dict' {"surname":"information"})     
-        
+            add_info: Additional information about teacher (`dict` {"surname":"information"})     
         """
 
         self.add_info = add_info
@@ -163,7 +178,11 @@ class Shedule(object):
         
     
     def save_timetable(self, time):
-        """TODO: Write a doc here"""
+        """Save timetable to file
+        
+        Args:
+            time: timetable `tuple` ((begin, end) ...)   
+        """
         
         if not os.path.isdir(f'shedules'):
             os.makedirs(f'shedules') 
@@ -179,7 +198,10 @@ class Shedule(object):
             f.write(str(timetable).replace(")), ", ")), \n"))
             
     def load_timetable(self):
-        """TODO: Write a doc here"""
+        """Load timetable from file
+        
+        Returns: timetable `tuple` ((begin, end) ...)
+        """
         path = os.path.abspath(f'shedules/timetable.json') 
         with open(path, 'r', encoding="utf-8") as f:        
             timetable = literal_eval(f.read())
@@ -192,7 +214,12 @@ class Shedule(object):
         return self.timetable
     
     def save(self, date, lessons):
-        """TODO: Write a doc here"""
+        """Save shedule to file
+        
+        Args:
+            date: :class:`datetime.time` 
+            lessons: `list` of lessons
+        """
                 
         day_str = f"{date.month}-{date.day}-{date.year}" 
         
